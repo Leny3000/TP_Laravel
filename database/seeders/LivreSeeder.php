@@ -13,6 +13,9 @@ class LivreSeeder extends Seeder
      */
     public function run(): void
     {
+        // On vide la table avant d'insérer pour éviter les doublons
+        Livre::truncate();
+
         $livres = [
             [
                 'titre' => 'Laravel pour Débutants',
