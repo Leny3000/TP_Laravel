@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Livre;
-use App\Models\Category;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -14,13 +13,9 @@ class LivreSeeder extends Seeder
      */
     public function run(): void
     {
-        // Récupération des catégories pour les relations
-        $laravel = Category::where('slug', 'laravel')->first();
-        $php = Category::where('slug', 'php')->first();
-        $database = Category::where('slug', 'database')->first();
-        $frontend = Category::where('slug', 'frontend')->first();
-        $devops = Category::where('slug', 'devops')->first();
-        $architecture = Category::where('slug', 'architecture')->first();
+
+        // Nettoyage de la table livres pour éviter les doublons d'ISBN
+        \App\Models\Livre::truncate();
 
         $livres = [
             [
@@ -33,7 +28,7 @@ class LivreSeeder extends Seeder
                 'couverture' => 'laravel.jpg',
                 'disponible' => true,
                 'categorie' => 'Laravel', // Ancien champ pour compatibilité
-                'category_id' => $laravel?->id,
+                // 'category_id' => null,
             ],
             [
                 'titre' => 'Docker en Pratique',
@@ -45,7 +40,7 @@ class LivreSeeder extends Seeder
                 'couverture' => 'docker.jpg',
                 'disponible' => true,
                 'categorie' => 'DevOps',
-                'category_id' => $devops?->id,
+                // 'category_id' => null,
             ],
             [
                 'titre' => 'MVC Expliqué Simplement',
@@ -57,7 +52,7 @@ class LivreSeeder extends Seeder
                 'couverture' => 'mvc.jpg',
                 'disponible' => false,
                 'categorie' => 'Architecture',
-                'category_id' => $architecture?->id,
+                // 'category_id' => null,
             ],
             [
                 'titre' => 'PHP 8 - Les Nouveautés',
@@ -69,7 +64,7 @@ class LivreSeeder extends Seeder
                 'couverture' => 'php8.jpg',
                 'disponible' => true,
                 'categorie' => 'PHP',
-                'category_id' => $php?->id,
+                // 'category_id' => null,
             ],
             [
                 'titre' => 'SQLite pour les Applications Modernes',
@@ -81,7 +76,7 @@ class LivreSeeder extends Seeder
                 'couverture' => 'sqlite.jpg',
                 'disponible' => true,
                 'categorie' => 'Base de Données',
-                'category_id' => $database?->id,
+                // 'category_id' => null,
             ],
             [
                 'titre' => 'Bootstrap 5 et CSS Moderne',
@@ -93,7 +88,7 @@ class LivreSeeder extends Seeder
                 'couverture' => 'bootstrap5.jpg',
                 'disponible' => true,
                 'categorie' => 'Frontend',
-                'category_id' => $frontend?->id,
+                // 'category_id' => null,
             ]
         ];
 

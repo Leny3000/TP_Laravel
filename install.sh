@@ -19,22 +19,20 @@ echo -e "${BLUE}🚀 Installation BiblioTech - Auto-détection environnement${NC
 # DETECTION ENVIRONNEMENT
 # ===============================================
 
+
 if [ -n "$CODESPACE_NAME" ]; then
     ENVIRONMENT="codespace"
     echo -e "${GREEN}✅ Environnement détecté : GitHub Codespace${NC}"
-    WORKSPACE_DIR="/workspace"
 elif [ -f /.dockerenv ]; then
     ENVIRONMENT="docker"
     echo -e "${GREEN}✅ Environnement détecté : Container Docker${NC}"
-    WORKSPACE_DIR="/workspace"
 else
     ENVIRONMENT="local"
     echo -e "${GREEN}✅ Environnement détecté : Installation locale${NC}"
-    WORKSPACE_DIR="$(pwd)"
 fi
 
-# Se positionner dans le workspace
-cd "$WORKSPACE_DIR"
+# Se positionner dans le workspace (toujours le dossier courant)
+cd "$(pwd)"
 
 # ===============================================
 # CONFIGURATION .ENV
@@ -56,16 +54,9 @@ fi
 case $ENVIRONMENT in
     "codespace")
         sed -i "s|APP_URL=.*|APP_URL=https://${CODESPACE_NAME}-8000.app.github.dev|" .env
-        # Codespace avec Docker : utilise PostgreSQL optionnel
-        if [ -f docker-compose.yml ]; then
-            sed -i 's|DB_CONNECTION=.*|DB_CONNECTION=pgsql|' .env
-            sed -i 's|DB_HOST=.*|DB_HOST=database|' .env
-            echo -e "${GREEN}✅ Configuration Codespace (PostgreSQL Docker)${NC}"
-        else
-            # SQLite par défaut même en Codespace
-            sed -i 's|DB_CONNECTION=.*|DB_CONNECTION=sqlite|' .env
-            echo -e "${GREEN}✅ Configuration Codespace (SQLite)${NC}"
-        fi
+        # Forcer SQLite par défaut en Codespace, même si docker-compose.yml est présent
+        sed -i 's|DB_CONNECTION=.*|DB_CONNECTION=sqlite|' .env
+        echo -e "${GREEN}✅ Configuration Codespace (SQLite)${NC}"
         ;;
     "docker")
         sed -i 's|APP_URL=.*|APP_URL=http://localhost:8000|' .env
